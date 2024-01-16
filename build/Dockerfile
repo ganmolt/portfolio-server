@@ -5,7 +5,4 @@ RUN apk update && apk add git
 WORKDIR /go/src
 # module
 RUN go mod init portfolio-server
-
-RUN go get -u github.com/gin-gonic/gin
-
 RUN go mod tidy
