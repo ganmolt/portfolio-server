@@ -1,0 +1,16 @@
+version: '3'
+services:
+  app:
+    container_name: portfolio-server
+    build:
+      context: .
+      dockerfile: ./build/Dockerfile
+    tty: true
+    volumes:
+      - ./app:/go/src
+    env_file:
+      - ./build/.go_env
+    ports:
+      - 3001:3001
+    environment:
+      - TZ=Asia/Tokyo
