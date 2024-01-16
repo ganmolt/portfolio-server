@@ -7,10 +7,11 @@ import (
 func main() {
     router := gin.Default()
 
+		router.LoadHTMLGlob("templates/*.html")
+
+		data := "Hello Go/Gin!!"
     router.GET("/", func(c *gin.Context) {
-        c.JSON(200, gin.H{
-            "message": "Hello World",
-        })
+				c.HTML(200, "index.html", gin.H{"data": data})
     })
 
     router.Run(":3001")
