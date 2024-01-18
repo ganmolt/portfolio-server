@@ -2,15 +2,19 @@ version: '3'
 services:
   app:
     container_name: portfolio-server
-    build:
-      context: .
-      dockerfile: ./build/Dockerfile
+    build: ./app
     tty: true
     volumes:
-      - ./app:/go/src
-    env_file:
-      - ./build/.go_env
+      - .:/go/src
     ports:
       - 3001:3001
     environment:
       - TZ=Asia/Tokyo
+
+  db:
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_USER: root
+      MYSQL_ROOT_PASSWORD: mysql

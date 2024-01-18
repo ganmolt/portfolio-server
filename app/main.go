@@ -4,6 +4,7 @@ import (
   "os"
   "fmt"
   "github.com/gin-gonic/gin"
+  "golang.org/x/crypto/bcrypt"
   "gorm.io/driver/mysql"
   "gorm.io/gorm"
 )
@@ -12,7 +13,7 @@ type User struct {
   gorm.Model
   Id  int `gorm:"primaryKey" json:"id"`
   Name string `json:"name"`
-  Age  int `json:"age"`
+  Password string `json:"-"`
 }
 
 func main() {
@@ -43,6 +44,24 @@ func main() {
     db.Unscoped().Find(&users)
     c.JSON(200, users)
   })
+
+  router.POST("/users", func(c *gin.Context) {
+		var newUser User
+		if err := c.ShouldBindJSON(&newUser); err != nil {
+			c.JSON(400, gin.H{"error": err.Error()})
+			return
+		}
+
+		hashedPassword, err := bcrypt.GenerateFromPassword([]byte(newUser.Password), bcrypt.DefaultCost)
+		if err != nil {
+			c.JSON(500, gin.H{"error": "failed to hash password"})
+			return
+		}
+		newUser.Password = string(hashedPassword)
+
+		db.Create(&newUser)
+		c.JSON(200, newUser)
+	})
 
   router.Run(":3001")
 }
