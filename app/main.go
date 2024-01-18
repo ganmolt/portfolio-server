@@ -12,7 +12,7 @@ import (
 type User struct {
   gorm.Model
   Id  int `gorm:"primaryKey" json:"id"`
-  Name string `json:"name"`
+  Username string `json:"username"`
   Password string `json:"-"`
 }
 
@@ -45,7 +45,7 @@ func main() {
     c.JSON(200, users)
   })
 
-  router.POST("/users", func(c *gin.Context) {
+  router.POST("/signup", func(c *gin.Context) {
 		var newUser User
 		if err := c.ShouldBindJSON(&newUser); err != nil {
 			c.JSON(400, gin.H{"error": err.Error()})
