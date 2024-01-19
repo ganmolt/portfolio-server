@@ -1,12 +1,16 @@
 package main 
 
 import (
-  "os"
-  "fmt"
   "github.com/gin-gonic/gin"
   "golang.org/x/crypto/bcrypt"
-  "gorm.io/driver/mysql"
   "gorm.io/gorm"
+
+  "log"
+  "net/http"
+
+  "controllers/signup"
+  "controllers/auth"
+  "controllers/dbpkg"
 )
 
 type User struct {
@@ -17,18 +21,7 @@ type User struct {
 }
 
 func main() {
-  dsn := fmt.Sprintf(
-    "%s:%s@tcp(%s)/%s?tls=true",
-    os.Getenv("DB_USERNAME"),
-    os.Getenv("DB_PASSWORD"),
-    os.Getenv("DB_HOST"),
-    os.Getenv("DB_DATABASE"),
-  )
-  
-  db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	if err != nil {
-		panic("failed to connect database")
-	}
+  db := dbpkg.GormConnect()
 
   router := gin.Default()
 
@@ -39,29 +32,57 @@ func main() {
       c.HTML(200, "index.html", gin.H{"data": data})
   })
 
+  router.POST("/register", auth.Register)
+
   router.GET("/users", func(c *gin.Context) {
     var users []User
     db.Unscoped().Find(&users)
     c.JSON(200, users)
   })
 
-  router.POST("/signup", func(c *gin.Context) {
-		var newUser User
-		if err := c.ShouldBindJSON(&newUser); err != nil {
-			c.JSON(400, gin.H{"error": err.Error()})
-			return
-		}
+  router.GET("/signup", func(c *gin.Context) {
+    c.HTML(200, "signup.html", gin.H{})
+  })
 
-		hashedPassword, err := bcrypt.GenerateFromPassword([]byte(newUser.Password), bcrypt.DefaultCost)
-		if err != nil {
-			c.JSON(500, gin.H{"error": "failed to hash password"})
-			return
-		}
-		newUser.Password = string(hashedPassword)
+  router.POST("/signup", signup.Signup)
 
-		db.Create(&newUser)
-		c.JSON(200, newUser)
-	})
+  router.GET("/signin", func(c *gin.Context) {
+    c.HTML(200, "signin.html", gin.H{})
+  })
 
+  router.POST("/signin", func(c *gin.Context) {
+    log.Println(c)
+    if (1 >= 0) {
+      // c.JSON(200, "asdf")
+      c.JSON(200, c.PostForm("username"))
+      // c.PostForm("Username")
+      return
+    }
+    // DBから取得したユーザーパスワード(Hash)
+    dbPassword := dbpkg.GetUser(c.PostForm("username")).Password
+    log.Println(dbPassword)
+    // フォームから取得したユーザーパスワード
+    formPassword := c.PostForm("password")
+
+    // ユーザーパスワードの比較
+    if err := CompareHashAndPassword(dbPassword, formPassword); err != nil {
+      log.Println(dbPassword, formPassword)
+      log.Println("ログインできませんでした")
+      c.HTML(http.StatusBadRequest, "signin.html", gin.H{"err": err})
+      c.Abort()
+    } else {
+      log.Println("ログインできました")
+      c.Redirect(302, "/")
+    }
+  })
   router.Run(":3001")
 }
+
+func PasswordEncrypt(password string) (string, error) {
+	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	return string(hash), err
+}
+func CompareHashAndPassword(hash, password string) error {
+	return bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+}
+
