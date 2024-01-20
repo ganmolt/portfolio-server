@@ -3,16 +3,16 @@ package signup
 import (
 	"gorm.io/gorm"
 	"github.com/gin-gonic/gin"
-	"golang.org/x/crypto/bcrypt"
 
 	"controllers/dbpkg"
+	"controllers/crypto"
 )
 
 type User struct {
   gorm.Model
   Id  int `gorm:"primaryKey" json:"id"`
   Username string `json:"username"`
-  Password string `json:"-"`
+  Password string `json:"password"`
 }
 
 func Signup(c *gin.Context) {
@@ -23,21 +23,9 @@ func Signup(c *gin.Context) {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
-
-	hashedPassword, err := PasswordEncrypt(newUser.Password)
-	if err != nil {
-		c.JSON(500, gin.H{"error": "failed to hash password"})
-		return
-	}
-	newUser.Password = string(hashedPassword)
+	hashedPassword := crypto.PasswordEncrypt(newUser.Password)
+	newUser.Password = hashedPassword
 
 	db.Create(&newUser)
 	c.JSON(200, newUser)
 }
-
-
-func PasswordEncrypt(password string) (string, error) {
-	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-	return string(hash), err
-}
-
