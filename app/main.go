@@ -2,7 +2,6 @@ package main
 
 import (
   "github.com/gin-gonic/gin"
-  "gorm.io/gorm"
 
   "controllers/signin"
   "controllers/signup"
@@ -11,8 +10,7 @@ import (
 )
 
 type User struct {
-  gorm.Model
-  Id  int `gorm:"primaryKey" json:"id"`
+  ID  int `gorm:"primaryKey" json:"id"`
   Username string `json:"Username"`
   Password string `json:"Password"`
 }

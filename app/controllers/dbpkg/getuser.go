@@ -2,20 +2,27 @@ package dbpkg
 
 import (
 	"gorm.io/gorm"
+
+  "errors"
 )
 
 type User struct {
-	gorm.Model
-	Id        int        `gorm:"primaryKey" json:"id"`
-	Username  string     `json:"username"`
-	Password  string     `json:"password"`
-	CreatedAt string     `json:"created_at"`
-	UpdatedAt string     `json:"updated_at"`
+  Username string `json:"username"`
+  Password string `json:"password"`
 }
 
-func GetUser(username string) User {
+func GetByUsername(username string) (*User, error) {
 	db := GormConnect()
-	var user User
-	db.First(&user, "username = ?", username)
-	return user
+	var dbUser User
+	if err := db.
+						Select("username", "password").
+						First(&dbUser, "username = ?", username).
+						Error; err != nil {
+							if errors.Is(err, gorm.ErrRecordNotFound) {
+							  return nil, nil
+							}
+							  return nil, err
+						}
+	return &dbUser, nil
 }
+
