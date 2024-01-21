@@ -6,7 +6,8 @@ import (
   "controllers/signin"
   "controllers/signup"
   "controllers/auth"
-  "controllers/dbpkg"
+
+  "controllers/users"
 )
 
 type User struct {
@@ -16,8 +17,6 @@ type User struct {
 }
 
 func main() {
-  db := dbpkg.GormConnect()
-
   router := gin.Default()
 
   router.LoadHTMLGlob("templates/*.html")
@@ -29,11 +28,7 @@ func main() {
 
   router.POST("/register", auth.Register)
 
-  router.GET("/users", func(c *gin.Context) {
-    var users []User
-    db.Unscoped().Find(&users)
-    c.JSON(200, users)
-  })
+  router.GET("/users", users.Users)
 
   router.GET("/signup", func(c *gin.Context) {
     c.HTML(200, "signup.html", gin.H{})
@@ -49,5 +44,3 @@ func main() {
 
   router.Run(":3001")
 }
-
-
