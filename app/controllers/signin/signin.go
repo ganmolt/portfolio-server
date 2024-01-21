@@ -8,6 +8,8 @@ import (
 
 	"controllers/dbpkg"
 	"controllers/crypto"
+
+	"os"
 )
 
 type SigninData struct {
@@ -31,6 +33,7 @@ func Signin(c *gin.Context) {
 	}
 
 	if crypto.CompareHashAndPassword(dbUser.Password, input.Password) {
+		Login(c, input)
 		log.Println("ログインできました")
 		c.Redirect(302, "/")
 	} else {
@@ -38,4 +41,12 @@ func Signin(c *gin.Context) {
     c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid username or password"})
     c.Abort()
 	}
+}
+
+func Login(c *gin.Context, user SigninData) {
+  c.SetSameSite(http.SameSiteNoneMode) // samesiteをnonemodeにする
+  if os.Getenv("ENV") == "local" {
+    log.Println("cookieをセットする")
+    c.SetCookie("username", user.Username, 3600, "/", "localhost:3001", true, true)
+  }
 }
