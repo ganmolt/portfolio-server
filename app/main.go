@@ -11,6 +11,7 @@ import (
   "controllers/session"
 
   "controllers/users"
+  "controllers/works"
 )
 
 type User struct {
@@ -42,6 +43,7 @@ func main() {
         "Content-Length",
         "Accept-Encoding",
         "Authorization",
+        "access-token",
     },
     // cookieなどの情報を必要とするかどうか
     AllowCredentials: true,
@@ -67,13 +69,14 @@ func main() {
   // router.GET("/signin", func(c *gin.Context) {
   //   c.HTML(200, "signin.html", gin.H{})
   // })
-  router.POST("/auth/session", session.Session)
+  router.GET("/auth/session", session.Session)
 
   router.POST("/auth/signin", signin.Signin)
 
   authorized := router.Group("/admin")
   {
     authorized.GET("/users", users.Users)
+    authorized.GET("/works", works.Works)
   }
 
   router.Run(":3001")

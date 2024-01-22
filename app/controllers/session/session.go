@@ -12,19 +12,8 @@ import (
   "strings"
 )
 
-type Input struct{
-  AccessToken string `json:"access-token"`
-}
-
 func Session(c *gin.Context) {
-	var input Input
-	if err := c.ShouldBindJSON(&input); err != nil {
-		log.Println("ログインしてください")
-		c.JSON(400, gin.H{"error": err.Error()})
-		return
-	}
-  isExist, user := IsLoginUserExist(input)
-
+  isExist, user := IsLoginUserExist(c)
   if isExist {
     c.JSON(200, user)
   } else {
@@ -33,8 +22,8 @@ func Session(c *gin.Context) {
 }
 
 // ログイン確認
-func IsLoginUserExist(input Input) (bool, *dbpkg.User) {
-  encodedToken := input.AccessToken
+func IsLoginUserExist(c *gin.Context) (bool, *dbpkg.User) {
+  encodedToken := c.Request.Header.Get("access-token")
   // encoded-tokenをdecode
   decodedToken, err := basicauth.DecodeBase64(encodedToken)
 

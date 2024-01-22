@@ -1,9 +1,9 @@
-package users
+package works
 
 import (
 	"github.com/gin-gonic/gin"
 
-	"log"
+  "log"
 
 	"controllers/dbpkg"
 
@@ -12,16 +12,23 @@ import (
   "strings"
 )
 
-func Users(c *gin.Context) {
-  db := dbpkg.GormConnect()
+type Work struct {
+  name string `json:"name"`
+  url string `json:"url"`
+  description string `json:"description"`
+  encodedImg string `json:"encodedImg"`
+}
 
+func Works(c *gin.Context) {
   isExist, _ := IsLoginUserExist(c)
 
   if isExist {
     log.Println("isExist!")
-    var users []dbpkg.User
-    db.Unscoped().Find(&users)
-    c.JSON(200, users)
+    db := dbpkg.GormConnect()
+
+    var works []Work
+    db.Unscoped().Find(&works)
+    c.JSON(200, works)
   } else {
     c.JSON(401, gin.H{"msg": "Unauthorized"})
   }
