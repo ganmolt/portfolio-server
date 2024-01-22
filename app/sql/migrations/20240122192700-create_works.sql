@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS works (
   id int NOT NULL AUTO_INCREMENT,
   name varchar(255) NOT NULL,
   url varchar(4095) NOT NULL,
+  tech varchar(255) NOT NULL,
   description varchar(4095) NOT NULL,
 	encoded_img text NOT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,

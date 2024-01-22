@@ -76,6 +76,7 @@ func main() {
   authorized := router.Group("/admin")
   {
     authorized.GET("/users", users.Users)
+    authorized.POST("/works/create", works.Create)
     authorized.GET("/works", works.Works)
   }
 
