@@ -6,7 +6,10 @@ replace controllers/dbpkg => ../dbpkg
 
 replace controllers/crypto => ../crypto
 
+replace controllers/basicauth => ../basicauth
+
 require (
+	controllers/basicauth v0.0.0-00010101000000-000000000000
 	controllers/crypto v0.0.0-00010101000000-000000000000
 	controllers/dbpkg v0.0.0-00010101000000-000000000000
 	github.com/gin-gonic/gin v1.9.1

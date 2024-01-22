@@ -10,15 +10,11 @@ import (
 	"controllers/crypto"
 
 	"os"
+	"controllers/basicauth"
 )
 
-type SigninData struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-}
-
 func Signin(c *gin.Context) {
-	var input SigninData
+	var input dbpkg.User
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -43,10 +39,12 @@ func Signin(c *gin.Context) {
 	}
 }
 
-func Login(c *gin.Context, user SigninData) {
+func Login(c *gin.Context, user dbpkg.User) {
   c.SetSameSite(http.SameSiteNoneMode) // samesiteをnonemodeにする
   if os.Getenv("ENV") == "local" {
-    log.Println("cookieをセットする")
-    c.SetCookie("username", user.Username, 3600, "/", "localhost:3001", true, true)
+		raw_token := user.Username + ":" + user.Password
+		access_token := basicauth.EncodeBase64(raw_token)
+
+		c.SetCookie("access-token", access_token, 3600, "/", "localhost:3001", true, true)
   }
 }

@@ -28,8 +28,6 @@ func main() {
 
   router.POST("/register", auth.Register)
 
-  router.GET("/users", users.Users)
-
   router.GET("/signup", func(c *gin.Context) {
     c.HTML(200, "signup.html", gin.H{})
   })
@@ -41,6 +39,11 @@ func main() {
   })
 
   router.POST("/signin", signin.Signin)
+
+  authorized := router.Group("/admin")
+  {
+    authorized.GET("/users", users.Users)
+  }
 
   router.Run(":3001")
 }
