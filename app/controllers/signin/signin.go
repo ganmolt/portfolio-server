@@ -29,7 +29,11 @@ func Signin(c *gin.Context) {
 	}
 
 	if crypto.CompareHashAndPassword(dbUser.Password, input.Password) {
-		Login(c, input)
+		if os.Getenv("ENV") == "local" {
+			raw_token := input.Username + ":" + input.Password
+			access_token := basicauth.EncodeBase64(raw_token)
+			c.JSON(http.StatusOK, gin.H{"access-token": access_token})
+		}
 		log.Println("ログインできました")
 		c.Redirect(302, "/")
 	} else {
@@ -37,14 +41,4 @@ func Signin(c *gin.Context) {
     c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid username or password"})
     c.Abort()
 	}
-}
-
-func Login(c *gin.Context, user dbpkg.User) {
-  c.SetSameSite(http.SameSiteNoneMode) // samesiteをnonemodeにする
-  if os.Getenv("ENV") == "local" {
-		raw_token := user.Username + ":" + user.Password
-		access_token := basicauth.EncodeBase64(raw_token)
-
-		c.SetCookie("access-token", access_token, 3600, "/", "localhost:3001", true, true)
-  }
 }

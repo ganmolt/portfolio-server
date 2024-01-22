@@ -2,10 +2,13 @@ package main
 
 import (
   "github.com/gin-gonic/gin"
+  "github.com/gin-contrib/cors"
+  "time"
 
   "controllers/signin"
   "controllers/signup"
   "controllers/auth"
+  "controllers/session"
 
   "controllers/users"
 )
@@ -18,6 +21,33 @@ type User struct {
 
 func main() {
   router := gin.Default()
+
+  router.Use(cors.New(cors.Config{
+    // アクセスを許可したいアクセス元
+    AllowOrigins: []string{
+        "http://localhost:3000",
+        // 'https://example2.com',
+    },
+    // アクセスを許可したいHTTPメソッド(以下の例だとPUTやDELETEはアクセスできません)
+    AllowMethods: []string{
+        "POST",
+        "GET",
+        "OPTIONS",
+    },
+    // 許可したいHTTPリクエストヘッダ
+    AllowHeaders: []string{
+        "Access-Control-Allow-Credentials",
+        "Access-Control-Allow-Headers",
+        "Content-Type",
+        "Content-Length",
+        "Accept-Encoding",
+        "Authorization",
+    },
+    // cookieなどの情報を必要とするかどうか
+    AllowCredentials: true,
+    // preflightリクエストの結果をキャッシュする時間
+    MaxAge: 24 * time.Hour,
+  }))
 
   router.LoadHTMLGlob("templates/*.html")
 
@@ -32,13 +62,14 @@ func main() {
     c.HTML(200, "signup.html", gin.H{})
   })
 
-  router.POST("/signup", signup.Signup)
+  router.POST("/auth/signup", signup.Signup)
 
-  router.GET("/signin", func(c *gin.Context) {
-    c.HTML(200, "signin.html", gin.H{})
-  })
+  // router.GET("/signin", func(c *gin.Context) {
+  //   c.HTML(200, "signin.html", gin.H{})
+  // })
+  router.POST("/auth/session", session.Session)
 
-  router.POST("/signin", signin.Signin)
+  router.POST("/auth/signin", signin.Signin)
 
   authorized := router.Group("/admin")
   {
