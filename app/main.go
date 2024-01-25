@@ -27,7 +27,7 @@ func main() {
     // アクセスを許可したいアクセス元
     AllowOrigins: []string{
         "http://localhost:3000",
-        "https://ganmolt.github.io/react-portfolio",
+        "https://ganmolt.github.io",
     },
     // アクセスを許可したいHTTPメソッド(以下の例だとPUTやDELETEはアクセスできません)
     AllowMethods: []string{
@@ -73,11 +73,12 @@ func main() {
 
   router.POST("/auth/signin", signin.Signin)
 
+  authorized.GET("/works", works.Works)
+
   authorized := router.Group("/admin")
   {
     authorized.GET("/users", users.Users)
     authorized.POST("/works/create", works.Create)
-    authorized.GET("/works", works.Works)
   }
 
   router.Run(":3001")
