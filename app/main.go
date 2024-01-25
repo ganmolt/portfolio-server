@@ -44,6 +44,7 @@ func main() {
         "Accept-Encoding",
         "Authorization",
         "access-token",
+        "interest-cohort",
     },
     // cookieなどの情報を必要とするかどうか
     AllowCredentials: true,
