@@ -73,7 +73,7 @@ func main() {
 
   router.POST("/auth/signin", signin.Signin)
 
-  authorized.GET("/works", works.Works)
+  router.GET("/works", works.Works)
 
   authorized := router.Group("/admin")
   {
