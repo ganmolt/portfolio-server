@@ -1,6 +1,6 @@
 module app/controllers/session
 
-go 1.21.6
+go 1.21.4
 
 replace controllers/dbpkg => ../dbpkg
 

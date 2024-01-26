@@ -46,18 +46,12 @@ func Works(c *gin.Context) {
     EncodedImg string `json:"encodedImg"`
     Tech string `json:"tech"`
   }
-  isExist, _ := IsLoginUserExist(c)
 
-  if isExist {
-    log.Println("isExist!")
-    db := dbpkg.GormConnect()
+  db := dbpkg.GormConnect()
 
-    var works []Work
-    db.Unscoped().Find(&works)
-    c.JSON(200, works)
-  } else {
-    c.JSON(401, gin.H{"msg": "Unauthorized"})
-  }
+  var works []Work
+  db.Unscoped().Find(&works)
+  c.JSON(200, works)
 }
 
 // ログイン確認
