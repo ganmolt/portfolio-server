@@ -8,8 +8,6 @@ import (
 
 	"controllers/dbpkg"
 	"controllers/crypto"
-
-	"os"
 	"controllers/basicauth"
 )
 
@@ -29,11 +27,9 @@ func Signin(c *gin.Context) {
 	}
 
 	if crypto.CompareHashAndPassword(dbUser.Password, input.Password) {
-		if os.Getenv("ENV") == "local" {
-			raw_token := input.Username + ":" + input.Password
-			access_token := basicauth.EncodeBase64(raw_token)
-			c.JSON(http.StatusOK, gin.H{"access-token": access_token})
-		}
+		raw_token := input.Username + ":" + input.Password
+		access_token := basicauth.EncodeBase64(raw_token)
+		c.JSON(http.StatusOK, gin.H{"access-token": access_token})
 		log.Println("ログインできました")
 		c.Redirect(302, "/")
 	} else {
