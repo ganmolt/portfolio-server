@@ -17,7 +17,11 @@ func Users(c *gin.Context) {
 
   db := dbpkg.GormConnect()
 
-  var users []dbpkg.User
-  db.Unscoped().Find(&users)
-  c.JSON(200, users)
+  type User struct {
+    Username string `json:"username"`
+  }
+
+  var usernames []User
+  db.Unscoped().Select("Username").Find(&usernames)
+  c.JSON(200, usernames)
 }

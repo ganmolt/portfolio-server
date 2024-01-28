@@ -13,7 +13,6 @@ import (
 
 type User struct {
   gorm.Model
-  Id  int `gorm:"primaryKey" json:"id"`
   Username string `json:"username"`
   Password string `json:"password"`
 }
@@ -40,7 +39,7 @@ func Signin(c *gin.Context) (string, string) {
 		return "", string(err.Error())
 	}
 
-	dbUser, err := dbpkg.GetByUsername(input.Username)
+	dbUser, err := GetByUsername(input.Username)
 
 	if err != nil || dbUser == nil {
 		return "", "Invalid username or password"
@@ -83,7 +82,6 @@ func splitToken(input string) (bool, string, string) {
   user, password := input[:index], input[index+1:]
   return true, user, password
 }
-
 
 func GetByUsername(username string) (*User, error) {
 	db := dbpkg.GormConnect()
