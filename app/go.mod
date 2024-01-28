@@ -8,8 +8,6 @@ replace models/user => ./models/user
 
 replace controllers/dbpkg => ./controllers/dbpkg
 
-replace controllers/crypto => ./controllers/crypto
-
 replace controllers/users => ./controllers/users
 
 replace controllers/basicauth => ./controllers/basicauth
@@ -31,7 +29,6 @@ require (
 
 require (
 	controllers/basicauth v0.0.0-00010101000000-000000000000 // indirect
-	controllers/crypto v0.0.0-00010101000000-000000000000 // indirect
 	controllers/dbpkg v0.0.0-00010101000000-000000000000 // indirect
 	github.com/chenzhuoyu/iasm v0.9.0 // indirect
 	golang.org/x/crypto v0.18.0 // indirect
