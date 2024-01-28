@@ -1,4 +1,4 @@
-package crypto
+package usermodel
 
 import (
 	"crypto/sha256"

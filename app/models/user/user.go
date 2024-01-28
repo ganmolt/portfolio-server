@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"controllers/dbpkg"
-	"controllers/crypto"
 	"controllers/basicauth"
 )
 
@@ -27,7 +26,7 @@ func Create(c *gin.Context) (*User) {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return nil
 	}
-	hashedPassword := crypto.PasswordEncrypt(newUser.Password)
+	hashedPassword := PasswordEncrypt(newUser.Password)
 	newUser.Password = hashedPassword
 
 	db.Create(&newUser)
@@ -47,7 +46,7 @@ func Signin(c *gin.Context) (string, string) {
 		return "", "Invalid username or password"
 	}
 
-	if crypto.CompareHashAndPassword(dbUser.Password, input.Password) {
+	if CompareHashAndPassword(dbUser.Password, input.Password) {
 		raw_token := input.Username + ":" + input.Password
 		access_token := basicauth.EncodeBase64(raw_token)
 		return access_token, ""
@@ -69,7 +68,7 @@ func Session(accessToken string) (*User, string) {
 		return nil, "ユーザー名またはパスワードが違います"
 	}
 
-	if crypto.CompareHashAndPassword(dbUser.Password, password) {
+	if CompareHashAndPassword(dbUser.Password, password) {
 		return dbUser, ""
 	} else {
 		return nil, "ユーザー名またはパスワードが違います"

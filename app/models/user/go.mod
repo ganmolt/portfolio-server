@@ -4,13 +4,10 @@ go 1.21.4
 
 replace controllers/dbpkg => ../../controllers/dbpkg
 
-replace controllers/crypto => ../../controllers/crypto
-
 replace controllers/basicauth => ../../controllers/basicauth
 
 require (
 	controllers/basicauth v0.0.0-00010101000000-000000000000
-	controllers/crypto v0.0.0-00010101000000-000000000000
 	controllers/dbpkg v0.0.0-00010101000000-000000000000
 	github.com/gin-gonic/gin v1.9.1
 	gorm.io/gorm v1.25.6

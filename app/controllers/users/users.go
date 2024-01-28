@@ -7,9 +7,10 @@ import (
 
 	"controllers/dbpkg"
 
-  "controllers/crypto"
   "controllers/basicauth"
   "strings"
+
+  "models/user"
 )
 
 func Users(c *gin.Context) {
@@ -51,7 +52,7 @@ func IsLoginUserExist(c *gin.Context) (bool, *dbpkg.User) {
   if err != nil || user == nil {
     return false, nil
   }
-  if !crypto.CompareHashAndPassword(user.Password, tokenPassword) {
+  if !usermodel.CompareHashAndPassword(user.Password, tokenPassword) {
     log.Println("認証できませんでした")
     return false, nil
   }
