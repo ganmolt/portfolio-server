@@ -14,8 +14,6 @@ replace controllers/users => ./controllers/users
 
 replace controllers/basicauth => ./controllers/basicauth
 
-replace controllers/session => ./controllers/session
-
 replace controllers/works => ./controllers/works
 
 require (
@@ -26,7 +24,6 @@ require (
 
 require (
 	controllers v0.0.0-00010101000000-000000000000
-	controllers/session v0.0.0-00010101000000-000000000000
 	controllers/users v0.0.0-00010101000000-000000000000
 	controllers/works v0.0.0-00010101000000-000000000000
 	github.com/gin-contrib/cors v1.5.0
