@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"controllers/dbpkg"
-	"controllers/basicauth"
 )
 
 type User struct {
@@ -47,7 +46,7 @@ func Signin(c *gin.Context) (string, string) {
 
 	if CompareHashAndPassword(dbUser.Password, input.Password) {
 		raw_token := input.Username + ":" + input.Password
-		access_token := basicauth.EncodeBase64(raw_token)
+		access_token := EncodeBase64(raw_token)
 		return access_token, ""
 	} else {
 		return "", "Invalid username or password"
@@ -55,7 +54,7 @@ func Signin(c *gin.Context) (string, string) {
 }
 
 func Session(accessToken string) (*User, string) {
-  decodedToken, err := basicauth.DecodeBase64(accessToken)
+  decodedToken, err := DecodeBase64(accessToken)
 
 	ok, username, password := splitToken(decodedToken)
 	if !ok {

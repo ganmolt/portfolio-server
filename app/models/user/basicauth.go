@@ -1,4 +1,4 @@
-package basicauth
+package usermodel
 
 import (
 	"encoding/base64"
