@@ -2,11 +2,9 @@ module portfolio-server
 
 go 1.21.4
 
-replace controllers/auth => ./controllers/auth
-
 replace controllers/signin => ./controllers/signin
 
-replace controllers/signup => ./controllers/signup
+replace controllers => ./controllers
 
 replace controllers/dbpkg => ./controllers/dbpkg
 
@@ -21,13 +19,13 @@ replace controllers/session => ./controllers/session
 replace controllers/works => ./controllers/works
 
 require (
-	controllers/auth v0.0.0-00010101000000-000000000000
 	github.com/gin-gonic/gin v1.9.1
 	gorm.io/driver/mysql v1.5.2 // indirect
 	gorm.io/gorm v1.25.5 // indirect
 )
 
 require (
+	controllers v0.0.0-00010101000000-000000000000
 	controllers/session v0.0.0-00010101000000-000000000000
 	controllers/signin v0.0.0-00010101000000-000000000000
 	controllers/users v0.0.0-00010101000000-000000000000
@@ -44,7 +42,6 @@ require (
 )
 
 require (
-	controllers/signup v0.0.0
 	github.com/bytedance/sonic v1.10.1 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20230717121745-296ad89f973d // indirect
 	github.com/gabriel-vasile/mimetype v1.4.2 // indirect

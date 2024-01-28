@@ -6,12 +6,13 @@ import (
   "time"
 
   "controllers/signin"
-  "controllers/signup"
-  "controllers/auth"
   "controllers/session"
 
   "controllers/users"
   "controllers/works"
+
+
+  "controllers"
 )
 
 type User struct {
@@ -59,17 +60,13 @@ func main() {
       c.HTML(200, "index.html", gin.H{"data": data})
   })
 
-  router.POST("/register", auth.Register)
-
   router.GET("/signup", func(c *gin.Context) {
     c.HTML(200, "signup.html", gin.H{})
   })
 
-  router.POST("/auth/signup", signup.Signup)
+  router.POST("/auth/signup", controllers.Signup)
 
-  // router.GET("/signin", func(c *gin.Context) {
-  //   c.HTML(200, "signin.html", gin.H{})
-  // })
+
   router.GET("/auth/session", session.Session)
 
   router.POST("/auth/signin", signin.Signin)
