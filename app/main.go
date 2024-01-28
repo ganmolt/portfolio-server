@@ -5,7 +5,6 @@ import (
   "github.com/gin-contrib/cors"
   "time"
 
-  "controllers/signin"
   "controllers/session"
 
   "controllers/users"
@@ -69,7 +68,7 @@ func main() {
 
   router.GET("/auth/session", session.Session)
 
-  router.POST("/auth/signin", signin.Signin)
+  router.POST("/auth/signin", controllers.Signin)
 
   router.GET("/works", works.Works)
 

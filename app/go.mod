@@ -2,8 +2,6 @@ module portfolio-server
 
 go 1.21.4
 
-replace controllers/signin => ./controllers/signin
-
 replace controllers => ./controllers
 
 replace models/user => ./models/user
@@ -29,7 +27,6 @@ require (
 require (
 	controllers v0.0.0-00010101000000-000000000000
 	controllers/session v0.0.0-00010101000000-000000000000
-	controllers/signin v0.0.0-00010101000000-000000000000
 	controllers/users v0.0.0-00010101000000-000000000000
 	controllers/works v0.0.0-00010101000000-000000000000
 	github.com/gin-contrib/cors v1.5.0

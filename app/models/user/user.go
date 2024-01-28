@@ -6,6 +6,7 @@ import (
 
 	"controllers/dbpkg"
 	"controllers/crypto"
+	"controllers/basicauth"
 )
 
 type User struct {
@@ -29,4 +30,25 @@ func Create(c *gin.Context) (*User) {
 	db.Create(&newUser)
 
 	return &newUser
+}
+
+func Signin(c *gin.Context) (string, string) {
+	var input User
+	if err := c.ShouldBindJSON(&input); err != nil {
+		return "", string(err.Error())
+	}
+
+	dbUser, err := dbpkg.GetByUsername(input.Username)
+
+	if err != nil || dbUser == nil {
+		return "", "Invalid username or password"
+	}
+
+	if crypto.CompareHashAndPassword(dbUser.Password, input.Password) {
+		raw_token := input.Username + ":" + input.Password
+		access_token := basicauth.EncodeBase64(raw_token)
+		return access_token, ""
+	} else {
+		return "", "Invalid username or password"
+	}
 }
