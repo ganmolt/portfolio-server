@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"errors"
+	"strings"
 
 	"controllers/dbpkg"
 	"controllers/crypto"
@@ -55,18 +56,35 @@ func Signin(c *gin.Context) (string, string) {
 	}
 }
 
-func Session(username string, password string) (*User, string) {
+func Session(accessToken string) (*User, string) {
+  decodedToken, err := basicauth.DecodeBase64(accessToken)
+
+	ok, username, password := splitToken(decodedToken)
+	if !ok {
+		return nil, "アクセストークンが誤っています"
+  }
+
 	dbUser, err := GetByUsername(username)
 	if err != nil || dbUser == nil {
-		return nil, "Invalid username or password"
+		return nil, "ユーザー名またはパスワードが違います"
 	}
 
 	if crypto.CompareHashAndPassword(dbUser.Password, password) {
 		return dbUser, ""
 	} else {
-		return nil, "Invalid username or password"
+		return nil, "ユーザー名またはパスワードが違います"
 	}
 }
+
+func splitToken(input string) (bool, string, string) {
+	index := strings.Index(input, ":")
+  if index == -1 {
+		return false, "", ""
+	}
+  user, password := input[:index], input[index+1:]
+  return true, user, password
+}
+
 
 func GetByUsername(username string) (*User, error) {
 	db := dbpkg.GormConnect()

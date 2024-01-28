@@ -5,10 +5,8 @@ import (
 
 	"log"
 	"net/http"
-	"strings"
 
 	"models/user"
-	"controllers/basicauth"
 )
 
 func Signup(c *gin.Context) {
@@ -30,32 +28,12 @@ func Signin(c *gin.Context) {
 }
 
 func Session(c *gin.Context) {
-	encodedToken := c.Request.Header.Get("access-token")
-  // encoded-tokenをdecode
-  decodedToken, err := basicauth.DecodeBase64(encodedToken)
+	access_token := c.Request.Header.Get("access-token")
+	user, errMessage := usermodel.Session(access_token)
 
-	// decoded-tokenの分割
-	ok, tokenUsername, tokenPassword := splitToken(decodedToken)
-
-	if !ok {
-		c.JSON(401, gin.H{"err": "分割失敗！"})
-    return
-  }
-
-	user, err_message := usermodel.Session(tokenUsername, tokenPassword)
-
-  if err == nil {
+  if errMessage == "" {
     c.JSON(200, user)
   } else {
-    c.JSON(401, gin.H{"err": err_message})
+    c.JSON(401, gin.H{"err": errMessage})
   }
-}
-
-func splitToken(input string) (bool, string, string) {
-	index := strings.Index(input, ":")
-  if index == -1 {
-		return false, "", ""
-	}
-  user, password := input[:index], input[index+1:]
-  return true, user, password
 }
