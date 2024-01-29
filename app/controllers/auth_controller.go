@@ -10,15 +10,29 @@ import (
 )
 
 func Signup(c *gin.Context) {
-	user := usermodel.Create(c)
+	var newUser usermodel.User
+	if err := c.ShouldBindJSON(&newUser); err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+	user, err := usermodel.Create(newUser)
+	if err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
 	c.JSON(200, user)
 }
 
 func Signin(c *gin.Context) {
-	token, err_message := usermodel.Signin(c)
+	var input usermodel.User
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+	}
+
+	token, err_message := usermodel.Signin(input.Username, input.Password)
 	if err_message != "" {
 		log.Println("ログインできませんでした")
-		c.JSON(http.StatusBadRequest, gin.H{"error": err_message})
+		c.JSON(400, gin.H{"error": err_message})
 		return
 	}
 

@@ -2,7 +2,6 @@ package usermodel
 
 import (
 	"gorm.io/gorm"
-	"github.com/gin-gonic/gin"
 
 	"errors"
 	"strings"
@@ -16,40 +15,31 @@ type User struct {
   Password string `json:"password"`
 }
 
-func Create(c *gin.Context) (*User) {
-	db := dbpkg.GormConnect()
-
-	var newUser User
-	if err := c.ShouldBindJSON(&newUser); err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
-		return nil
-	}
+func Create(newUser User) (*User, error) {
 	hashedPassword := PasswordEncrypt(newUser.Password)
 	newUser.Password = hashedPassword
 
-	db.Create(&newUser)
-
-	return &newUser
+	db := dbpkg.GormConnect()
+	result := db.Create(&newUser)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return &newUser, nil
 }
 
-func Signin(c *gin.Context) (string, string) {
-	var input User
-	if err := c.ShouldBindJSON(&input); err != nil {
-		return "", string(err.Error())
-	}
-
-	dbUser, err := GetByUsername(input.Username)
+func Signin(username string, password string) (string, string) {
+	dbUser, err := getByUsername(username)
 
 	if err != nil || dbUser == nil {
-		return "", "Invalid username or password"
+		return "", "ユーザー名またはパスワードが違います"
 	}
 
-	if CompareHashAndPassword(dbUser.Password, input.Password) {
-		raw_token := input.Username + ":" + input.Password
+	if CompareHashAndPassword(dbUser.Password, password) {
+		raw_token := username + ":" + password
 		access_token := EncodeBase64(raw_token)
 		return access_token, ""
 	} else {
-		return "", "Invalid username or password"
+		return "", "ユーザー名またはパスワードが違います"
 	}
 }
 
@@ -61,7 +51,7 @@ func Session(accessToken string) (*User, string) {
 		return nil, "アクセストークンが誤っています"
   }
 
-	dbUser, err := GetByUsername(username)
+	dbUser, err := getByUsername(username)
 	if err != nil || dbUser == nil {
 		return nil, "ユーザー名またはパスワードが違います"
 	}
@@ -82,7 +72,7 @@ func splitToken(input string) (bool, string, string) {
   return true, user, password
 }
 
-func GetByUsername(username string) (*User, error) {
+func getByUsername(username string) (*User, error) {
 	db := dbpkg.GormConnect()
 	var dbUser User
 	if err := db.
