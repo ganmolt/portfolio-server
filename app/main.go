@@ -59,9 +59,9 @@ func main() {
     c.HTML(200, "signup.html", gin.H{})
   })
 
-  router.POST("/auth/signup", controllers.Signup)
-  router.POST("/auth/signin", controllers.Signin)
-  router.GET("/auth/session", controllers.Session)
+  router.POST("/auth/signup", controllers.AuthController{}.Signup)
+  router.POST("/auth/signin", controllers.AuthController{}.Signin)
+  router.GET("/auth/session", controllers.AuthController{}.Session)
 
   router.GET("/works", controllers.WorksController{}.Show)
 

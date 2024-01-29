@@ -9,7 +9,9 @@ import (
 	"models/user"
 )
 
-func Signup(c *gin.Context) {
+type AuthController struct{}
+
+func (ac AuthController) Signup(c *gin.Context) {
 	var newUser usermodel.User
 	if err := c.ShouldBindJSON(&newUser); err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -23,7 +25,7 @@ func Signup(c *gin.Context) {
 	c.JSON(200, user)
 }
 
-func Signin(c *gin.Context) {
+func (ac AuthController) Signin(c *gin.Context) {
 	var input usermodel.User
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -41,7 +43,7 @@ func Signin(c *gin.Context) {
 	c.Redirect(302, "/")
 }
 
-func Session(c *gin.Context) {
+func (ac AuthController) Session(c *gin.Context) {
 	access_token := c.Request.Header.Get("access-token")
 	user, errMessage := usermodel.Session(access_token)
 
