@@ -3,7 +3,7 @@ package workmodel
 import (
 	"gorm.io/gorm"
 
-	"controllers/dbpkg"
+	"dbpkg"
 )
 
 type Work struct {

@@ -6,7 +6,7 @@ import (
 	"errors"
 	"strings"
 
-	"controllers/dbpkg"
+	"dbpkg"
 )
 
 type User struct {

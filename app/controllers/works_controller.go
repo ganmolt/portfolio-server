@@ -3,7 +3,7 @@ package controllers
 import (
 	"github.com/gin-gonic/gin"
 
-	"controllers/dbpkg"
+	"dbpkg"
   
   "models/user"
   "models/work"
