@@ -46,8 +46,6 @@ func main() {
     MaxAge: 24 * time.Hour,
   }))
 
-  router.LoadHTMLGlob("templates/*.html")
-
   data := "Hello Go/Gin!!"
   router.GET("/", func(c *gin.Context) {
       c.HTML(200, "index.html", gin.H{"data": data})
