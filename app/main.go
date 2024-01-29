@@ -5,8 +5,6 @@ import (
   "github.com/gin-contrib/cors"
   "time"
 
-  "controllers/users"
-
   "controllers"
 )
 
@@ -54,11 +52,6 @@ func main() {
   router.GET("/", func(c *gin.Context) {
       c.HTML(200, "index.html", gin.H{"data": data})
   })
-
-  router.GET("/signup", func(c *gin.Context) {
-    c.HTML(200, "signup.html", gin.H{})
-  })
-
   router.POST("/auth/signup", controllers.AuthController{}.Signup)
   router.POST("/auth/signin", controllers.AuthController{}.Signin)
   router.GET("/auth/session", controllers.AuthController{}.Session)
@@ -67,7 +60,7 @@ func main() {
 
   authorized := router.Group("/admin")
   {
-    authorized.GET("/users", users.Users)
+    authorized.GET("/users", controllers.UsersController{}.Users)
     authorized.POST("/works/create", controllers.WorksController{}.Create)
   }
 

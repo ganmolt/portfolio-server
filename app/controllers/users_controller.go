@@ -1,4 +1,4 @@
-package users
+package controllers
 
 import (
 	"github.com/gin-gonic/gin"
@@ -8,7 +8,9 @@ import (
   "models/user"
 )
 
-func Users(c *gin.Context) {
+type UsersController struct{}
+
+func (uc UsersController) Users(c *gin.Context) {
   access_token := c.Request.Header.Get("access-token")
 	_, errMessage := usermodel.Session(access_token)
   if errMessage != "" {
