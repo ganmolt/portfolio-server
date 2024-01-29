@@ -48,7 +48,7 @@ func main() {
 
   data := "Hello Go/Gin!!"
   router.GET("/", func(c *gin.Context) {
-      c.HTML(200, "index.html", gin.H{"data": data})
+    c.JSON(200, gin.H{"data": data})
   })
   router.POST("/auth/signup", controllers.AuthController{}.Signup)
   router.POST("/auth/signin", controllers.AuthController{}.Signin)
