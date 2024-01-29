@@ -6,7 +6,6 @@ import (
   "time"
 
   "controllers/users"
-  "controllers/works"
 
   "controllers"
 )
@@ -64,12 +63,12 @@ func main() {
   router.POST("/auth/signin", controllers.Signin)
   router.GET("/auth/session", controllers.Session)
 
-  router.GET("/works", works.Works)
+  router.GET("/works", controllers.WorksController{}.Show)
 
   authorized := router.Group("/admin")
   {
     authorized.GET("/users", users.Users)
-    authorized.POST("/works/create", works.Create)
+    authorized.POST("/works/create", controllers.WorksController{}.Create)
   }
 
   router.Run(":3001")

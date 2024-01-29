@@ -6,11 +6,11 @@ replace controllers => ./controllers
 
 replace models/user => ./models/user
 
+replace models/work => ./models/work
+
 replace controllers/dbpkg => ./controllers/dbpkg
 
 replace controllers/users => ./controllers/users
-
-replace controllers/works => ./controllers/works
 
 require (
 	github.com/gin-gonic/gin v1.9.1
@@ -21,7 +21,6 @@ require (
 require (
 	controllers v0.0.0-00010101000000-000000000000
 	controllers/users v0.0.0-00010101000000-000000000000
-	controllers/works v0.0.0-00010101000000-000000000000
 	github.com/gin-contrib/cors v1.5.0
 )
 
@@ -61,4 +60,5 @@ require (
 	google.golang.org/protobuf v1.31.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	models/user v0.0.0-00010101000000-000000000000 // indirect
+	models/work v0.0.0-00010101000000-000000000000 // indirect
 )
