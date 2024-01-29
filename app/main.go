@@ -50,7 +50,7 @@ func main() {
   router.GET("/", func(c *gin.Context) {
     c.JSON(200, gin.H{"data": data})
   })
-  router.POST("/auth/signup", controllers.AuthController{}.Signup)
+  // router.POST("/auth/signup", controllers.AuthController{}.Signup)
   router.POST("/auth/signin", controllers.AuthController{}.Signin)
   router.GET("/auth/session", controllers.AuthController{}.Session)
 
