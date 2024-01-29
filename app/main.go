@@ -5,13 +5,7 @@ import (
   "github.com/gin-contrib/cors"
   "time"
 
-  "controllers/signin"
-  "controllers/signup"
-  "controllers/auth"
-  "controllers/session"
-
-  "controllers/users"
-  "controllers/works"
+  "controllers"
 )
 
 type User struct {
@@ -52,34 +46,20 @@ func main() {
     MaxAge: 24 * time.Hour,
   }))
 
-  router.LoadHTMLGlob("templates/*.html")
-
   data := "Hello Go/Gin!!"
   router.GET("/", func(c *gin.Context) {
       c.HTML(200, "index.html", gin.H{"data": data})
   })
+  router.POST("/auth/signup", controllers.AuthController{}.Signup)
+  router.POST("/auth/signin", controllers.AuthController{}.Signin)
+  router.GET("/auth/session", controllers.AuthController{}.Session)
 
-  router.POST("/register", auth.Register)
-
-  router.GET("/signup", func(c *gin.Context) {
-    c.HTML(200, "signup.html", gin.H{})
-  })
-
-  router.POST("/auth/signup", signup.Signup)
-
-  // router.GET("/signin", func(c *gin.Context) {
-  //   c.HTML(200, "signin.html", gin.H{})
-  // })
-  router.GET("/auth/session", session.Session)
-
-  router.POST("/auth/signin", signin.Signin)
-
-  router.GET("/works", works.Works)
+  router.GET("/works", controllers.WorksController{}.Show)
 
   authorized := router.Group("/admin")
   {
-    authorized.GET("/users", users.Users)
-    authorized.POST("/works/create", works.Create)
+    authorized.GET("/users", controllers.UsersController{}.Users)
+    authorized.POST("/works/create", controllers.WorksController{}.Create)
   }
 
   router.Run(":3001")

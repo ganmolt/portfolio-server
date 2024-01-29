@@ -2,49 +2,31 @@ module portfolio-server
 
 go 1.21.4
 
-replace controllers/auth => ./controllers/auth
+replace controllers => ./controllers
 
-replace controllers/signin => ./controllers/signin
+replace models/user => ./models/user
 
-replace controllers/signup => ./controllers/signup
+replace models/work => ./models/work
 
-replace controllers/dbpkg => ./controllers/dbpkg
-
-replace controllers/crypto => ./controllers/crypto
-
-replace controllers/users => ./controllers/users
-
-replace controllers/basicauth => ./controllers/basicauth
-
-replace controllers/session => ./controllers/session
-
-replace controllers/works => ./controllers/works
+replace dbpkg => ./dbpkg
 
 require (
-	controllers/auth v0.0.0-00010101000000-000000000000
 	github.com/gin-gonic/gin v1.9.1
-	gorm.io/driver/mysql v1.5.2 // indirect
-	gorm.io/gorm v1.25.5 // indirect
+	gorm.io/gorm v1.25.6 // indirect
 )
 
 require (
-	controllers/session v0.0.0-00010101000000-000000000000
-	controllers/signin v0.0.0-00010101000000-000000000000
-	controllers/users v0.0.0-00010101000000-000000000000
-	controllers/works v0.0.0-00010101000000-000000000000
+	controllers v0.0.0-00010101000000-000000000000
 	github.com/gin-contrib/cors v1.5.0
 )
 
 require (
-	controllers/basicauth v0.0.0-00010101000000-000000000000 // indirect
-	controllers/crypto v0.0.0-00010101000000-000000000000 // indirect
-	controllers/dbpkg v0.0.0-00010101000000-000000000000 // indirect
 	github.com/chenzhuoyu/iasm v0.9.0 // indirect
 	golang.org/x/crypto v0.18.0 // indirect
 )
 
 require (
-	controllers/signup v0.0.0
+	dbpkg v0.0.0-00010101000000-000000000000 // indirect
 	github.com/bytedance/sonic v1.10.1 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20230717121745-296ad89f973d // indirect
 	github.com/gabriel-vasile/mimetype v1.4.2 // indirect
@@ -52,7 +34,7 @@ require (
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/go-playground/validator/v10 v10.15.5 // indirect
-	github.com/go-sql-driver/mysql v1.7.1 // indirect
+	github.com/go-sql-driver/mysql v1.7.0 // indirect
 	github.com/goccy/go-json v0.10.2 // indirect
 	github.com/google/go-cmp v0.5.8 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
@@ -73,4 +55,7 @@ require (
 	golang.org/x/text v0.14.0 // indirect
 	google.golang.org/protobuf v1.31.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
+	gorm.io/driver/mysql v1.5.2 // indirect
+	models/user v0.0.0-00010101000000-000000000000 // indirect
+	models/work v0.0.0-00010101000000-000000000000 // indirect
 )
