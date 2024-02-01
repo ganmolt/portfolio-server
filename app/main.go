@@ -28,6 +28,7 @@ func main() {
         "POST",
         "GET",
         "OPTIONS",
+        "DELETE",
     },
     // 許可したいHTTPリクエストヘッダ
     AllowHeaders: []string{
@@ -60,6 +61,7 @@ func main() {
   {
     authorized.GET("/users", controllers.UsersController{}.Users)
     authorized.POST("/works/create", controllers.WorksController{}.Create)
+    authorized.DELETE("/works/:id", controllers.WorksController{}.Delete)
   }
 
   router.Run(":3001")
