@@ -24,3 +24,31 @@ func Create(newWork Work) (*Work, error) {
 	}
 	return &newWork, nil
 }
+
+func Update(id string, data Work) (*Work, error) {
+	db := dbpkg.GormConnect()
+  var work Work
+  db.First(&work, "id = ?", id)
+  if data.Name != "" { work.Name = data.Name }
+  if data.Description != "" { work.Description = data.Description }
+  if data.Tech != "" { work.Tech = data.Tech }
+  if data.Url != "" { work.Url = data.Url }
+  if data.EncodedImg != "" { work.EncodedImg = data.EncodedImg }
+  res := db.Updates(&work)
+
+	if res.Error != nil {
+    return nil, res.Error
+  }
+	return &work, nil
+}
+
+func Delete(id string) (*Work, error) {
+	db := dbpkg.GormConnect()
+  var work Work
+  db.First(&work, "id = ?", id)
+  res := db.Delete(&work)
+  if res.Error != nil {
+    return nil, res.Error
+  }
+	return &work, nil
+}
