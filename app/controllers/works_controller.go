@@ -51,24 +51,14 @@ func (wc WorksController) Update(c *gin.Context) {
   }
 
   id := c.Param("id")
+  work, err := workmodel.Update(id, data)
 
-  db := dbpkg.GormConnect()
-  var work workmodel.Work
-  db.First(&work, "id = ?", id)
-  if data.Name != "" { work.Name = data.Name }
-  if data.Description != "" { work.Description = data.Description }
-  if data.Tech != "" { work.Tech = data.Tech }
-  if data.Url != "" { work.Url = data.Url }
-  if data.EncodedImg != "" { work.EncodedImg = data.EncodedImg }
-  res := db.Updates(&work)
-
-	if res.Error != nil {
-    c.JSON(400, gin.H{"error": res.Error})
-    log.Println(res.Error)
+  if err != nil {
+    c.JSON(400, gin.H{"err": err})
     return
   }
   log.Println("更新されました。")
-  c.JSON(200, "成功しました")
+  c.JSON(200, work)
 }
 
 func (wc WorksController) Delete(c *gin.Context) {
