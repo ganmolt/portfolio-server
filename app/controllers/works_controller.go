@@ -35,6 +35,40 @@ func (wc WorksController) Create(c *gin.Context) {
 	c.JSON(200, work)
 }
 
+
+func (wc WorksController) Update(c *gin.Context) {
+  access_token := c.Request.Header.Get("access-token")
+	_, errMessage := usermodel.Session(access_token)
+  if errMessage != "" {
+    c.JSON(401, gin.H{"err": errMessage})
+    return
+  }
+
+  var data workmodel.Work
+  if err := c.ShouldBindJSON(&data); err != nil {
+    c.JSON(400, gin.H{"error": err.Error()})
+    return
+  }
+
+  id := c.Param("id")
+
+  db := dbpkg.GormConnect()
+  var work workmodel.Work
+  db.First(&work, "id = ?", id)
+  work.Name = data.Name
+  work.Description = data.Description
+  work.Tech = data.Tech
+  res := db.Updates(&work)
+
+	if res.Error != nil {
+    c.JSON(400, gin.H{"error": res.Error})
+    log.Println(res.Error)
+    return
+  }
+  log.Println("更新されました。")
+  c.JSON(200, "成功しました")
+}
+
 func (wc WorksController) Delete(c *gin.Context) {
   access_token := c.Request.Header.Get("access-token")
 	_, errMessage := usermodel.Session(access_token)
