@@ -71,14 +71,13 @@ func (wc WorksController) Delete(c *gin.Context) {
 
   id := c.Param("id")
 
-  db := dbpkg.GormConnect()
-  var work workmodel.Work
-  db.First(&work, "id = ?", id)
-  res := db.Delete(&work)
-  if res.Error != nil {
-    c.JSON(400, gin.H{"error": res.Error})
+  work, err := workmodel.Delete(id)
+
+  if err != nil {
+    c.JSON(400, gin.H{"err": err})
     return
   }
+
   log.Println(id + "が削除されました。")
   c.JSON(200, &work)
 }

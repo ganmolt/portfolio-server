@@ -4,8 +4,6 @@ import (
 	"gorm.io/gorm"
 
 	"dbpkg"
-
-	"log"
 )
 
 type Work struct {
@@ -39,7 +37,17 @@ func Update(id string, data Work) (*Work, error) {
   res := db.Updates(&work)
 
 	if res.Error != nil {
-    log.Println(res.Error)
+    return nil, res.Error
+  }
+	return &work, nil
+}
+
+func Delete(id string) (*Work, error) {
+	db := dbpkg.GormConnect()
+  var work Work
+  db.First(&work, "id = ?", id)
+  res := db.Delete(&work)
+  if res.Error != nil {
     return nil, res.Error
   }
 	return &work, nil
