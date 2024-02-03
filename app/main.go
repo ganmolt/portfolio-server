@@ -22,6 +22,10 @@ func main() {
     AllowOrigins: []string{
         "http://localhost:3000",
         "https://ganmolt.github.io",
+
+        "https://react-portfolio-one-smoky.vercel.app",
+        "https://react-portfolio-ganmolts-projects.vercel.app",
+        "https://react-portfolio-git-master-ganmolts-projects.vercel.app",
     },
     // アクセスを許可したいHTTPメソッド(以下の例だとPUTやDELETEはアクセスできません)
     AllowMethods: []string{
